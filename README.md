@@ -41,13 +41,6 @@
     <li><code>Intl.NumberFormat</code> for currency formatting</li>
   </ul>
 
-  <h2>📁 Project Structure</h2>
-  <pre>
-📦 money-count-calculator
- ┣ 📄 index.html
- ┗ 📄 screenshot.png (optional)
-  </pre>
-
   <h2>📜 License</h2>
   <p>This project is open-source and available under the <strong>MIT License</strong>.</p>
 
