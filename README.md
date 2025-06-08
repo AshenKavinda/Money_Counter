@@ -41,15 +41,6 @@
     <li><code>Intl.NumberFormat</code> for currency formatting</li>
   </ul>
 
-  <h2>📜 License</h2>
-  <p>This project is open-source and available under the <strong>MIT License</strong>.</p>
-
-  <h2>🙌 Acknowledgements</h2>
-  <ul>
-    <li>Inspired by cash tallying needs for small shops and home use</li>
-    <li>Made with ❤️ by contributors like you</li>
-  </ul>
-
   <h2>🔗 Links</h2>
   <ul>
     <li><a href="https://github.com/AshenKavinda/Money_Counter" target="_blank">View on GitHub</a></li>
