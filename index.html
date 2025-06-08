@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Money Count Calculator</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .main-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .input-section {
+      flex: 1;
+      min-width: 280px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .right-section {
+      flex: 1;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .output-section, .breakdown-section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .output-section { position: sticky; top: 20px; }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .currency-preview {
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .calculate-btn {
+      background: #007bff;
+      color: white;
+    }
+
+    .calculate-btn:hover {
+      background: #0056b3;
+    }
+
+    .reset-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .reset-btn:hover {
+      background: #b02a37;
+    }
+
+    .result {
+      font-size: 16px;
+      color: #222;
+      margin-top: 10px;
+    }
+
+    .breakdown-content {
+      margin-top: 10px;
+      font-family: monospace;
+      background: #fafafa;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .breakdown-section {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+
+      .right-section {
+        width: 100%;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Money Count Calculator</h1>
+
+<div class="main-container">
+  <!-- Left Inputs -->
+  <div class="input-section">
+    <div class="form-group"><label for="count5000">5000 Count</label><input type="number" id="count5000" min="0" value="0"></div>
+    <div class="form-group"><label for="count1000">1000 Count</label><input type="number" id="count1000" min="0" value="0"></div>
+    <div class="form-group"><label for="count500">500 Count</label><input type="number" id="count500" min="0" value="0"></div>
+    <div class="form-group"><label for="count100">100 Count</label><input type="number" id="count100" min="0" value="0"></div>
+    <div class="form-group"><label for="count50">50 Count</label><input type="number" id="count50" min="0" value="0"></div>
+    <div class="form-group"><label for="count20">20 Count</label><input type="number" id="count20" min="0" value="0"></div>
+    <div class="form-group">
+      <label for="payable">Total Payable (Optional)</label>
+      <input type="number" id="payable" min="0" placeholder="Leave blank if not applicable">
+      <div class="currency-preview" id="payablePreview">Formatted: LKR 0.00</div>
+    </div>
+  </div>
+
+  <!-- Right Outputs and Breakdown -->
+  <div class="right-section">
+    <!-- Output -->
+    <div class="output-section">
+      <div class="button-group">
+        <button class="calculate-btn" onclick="calculate()">Calculate</button>
+        <button class="reset-btn" onclick="resetForm()">Reset</button>
+      </div>
+      <div class="result" id="output">
+        <p><strong>Total Money Counted:</strong> -</p>
+        <p><strong>Balance:</strong> -</p>
+        <p><strong>Total Payable in Words:</strong> -</p>
+      </div>
+    </div>
+
+    <!-- Breakdown -->
+    <div class="breakdown-section" id="breakdownSection">
+      <h3>Breakdown</h3>
+      <div class="breakdown-content" id="breakdownContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const formatter = new Intl.NumberFormat('en-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    minimumFractionDigits: 2
+  });
+
+  document.getElementById("payable").addEventListener("input", () => {
+    const val = parseFloat(document.getElementById("payable").value) || 0;
+    document.getElementById("payablePreview").innerText = `Formatted: ${formatter.format(val)}`;
+  });
+
+  function numberToWords(n) {
+    const a = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+      "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen",
+      "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+    const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+    if (n === 0) return "Zero";
+    if (n < 0) return "Minus " + numberToWords(-n);
+
+    function convert(num) {
+      if (num < 20) return a[num];
+      if (num < 100) return b[Math.floor(num / 10)] + (num % 10 ? " " + a[num % 10] : "");
+      if (num < 1000) return a[Math.floor(num / 100)] + " Hundred" + (num % 100 ? " and " + convert(num % 100) : "");
+      if (num < 100000) return convert(Math.floor(num / 1000)) + " Thousand" + (num % 1000 ? " " + convert(num % 1000) : "");
+      if (num < 10000000) return convert(Math.floor(num / 100000)) + " Lakh" + (num % 100000 ? " " + convert(num % 100000) : "");
+      return convert(Math.floor(num / 10000000)) + " Crore" + (num % 10000000 ? " " + convert(num % 10000000) : "");
+    }
+
+    return convert(n);
+  }
+
+  function calculate() {
+    const counts = [5000, 1000, 500, 100, 50, 20];
+    let total = 0;
+    let breakdown = [];
+
+    for (let val of counts) {
+      const input = document.getElementById(`count${val}`);
+      const count = Number(input.value);
+      if (isNaN(count) || count < 0) {
+        alert(`Invalid input for ${val} count`);
+        return;
+      }
+      if (count > 0) {
+        breakdown.push(`${val} x ${count} = ${val * count}`);
+        total += val * count;
+      }
+    }
+
+    const payableInput = document.getElementById("payable").value;
+    let payable = 0;
+    let balance = "-";
+    let words = "-";
+
+    if (payableInput !== "") {
+      payable = Number(payableInput);
+      if (isNaN(payable) || payable < 0) {
+        alert("Please enter a valid payable amount");
+        return;
+      }
+      if (payable > total) {
+        alert("The total is not enough!!");
+        return;
+      }
+      balance = total - payable;
+      words = numberToWords(payable);
+    }
+
+    document.getElementById("output").innerHTML = `
+      <p><strong>Total Money Counted:</strong> ${formatter.format(total)}</p>
+      <p><strong>Balance:</strong> ${balance === "-" ? "-" : formatter.format(balance)}</p>
+      <p><strong>Total Payable in Words:</strong> ${words}</p>
+    `;
+
+    const breakdownHTML = breakdown.map(line => `<p>${line}</p>`).join("");
+    const extraLines = `
+      <hr><p><strong>Total:</strong> ${formatter.format(total)}</p>
+      <p><strong>Balance:</strong> ${balance === "-" ? "-" : formatter.format(balance)}</p>
+    `;
+
+    document.getElementById("breakdownContent").innerHTML = breakdownHTML + extraLines;
+    document.getElementById("breakdownSection").style.display = "block";
+  }
+
+  function resetForm() {
+    const fields = ["count5000", "count1000", "count500", "count100", "count50", "count20", "payable"];
+    fields.forEach(id => {
+      const input = document.getElementById(id);
+      input.value = id === "payable" ? "" : "0";
+    });
+
+    document.getElementById("output").innerHTML = `
+      <p><strong>Total Money Counted:</strong> -</p>
+      <p><strong>Balance:</strong> -</p>
+      <p><strong>Total Payable in Words:</strong> -</p>
+    `;
+
+    document.getElementById("breakdownContent").innerHTML = "";
+    document.getElementById("breakdownSection").style.display = "none";
+    document.getElementById("payablePreview").innerText = `Formatted: ₹0.00`;
+  }
+</script>
+
+</body>
+</html>
