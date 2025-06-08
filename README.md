@@ -21,10 +21,6 @@
     <li>Reset and Calculate buttons</li>
   </ul>
 
-  <h2>📷 Demo Screenshot</h2>
-  <p><em>Add a screenshot here if available:</em></p>
-  <pre>&lt;img src="screenshot.png" alt="Money Count Calculator UI" /&gt;</pre>
-
   <h2>🚀 How to Use</h2>
   <ol>
     <li>Open the <code>index.html</code> file in any web browser.</li>
