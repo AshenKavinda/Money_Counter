@@ -6,9 +6,9 @@
 
   <h2>✨ Features</h2>
   <ul>
-    <li>Input for various Indian currency denominations: ₹5000, ₹1000, ₹500, ₹100, ₹50, ₹20</li>
+    <li>Input for various Sri lankan currency denominations: LKR5000, LKR1000, LKR500, LKR100, LKR50, LKR20</li>
     <li>Optional input for a <strong>payable amount</strong></li>
-    <li>Live preview of formatted payable amount (e.g., ₹1,000.00)</li>
+    <li>Live preview of formatted payable amount (e.g., LKR1,000.00)</li>
     <li>Automatic calculation of:
       <ul>
         <li><strong>Total Money Counted</strong></li>
